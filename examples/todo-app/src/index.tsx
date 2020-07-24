@@ -6,9 +6,9 @@ import { Redirect, Route, HashRouter as Router } from 'react-router-dom';
 
 import { ContainerProvider } from '@neon/react';
 
-import { AppView } from './app/views/App.view';
 import { configureContainer } from './container.config';
-import { SignInPage } from './auth/views/SignInPage.view';
+import { SignInPage } from './auth/pages/SignInPage';
+import { TodoListPage } from './todo/pages/TodoListPage';
 
 const container = configureContainer();
 
@@ -20,7 +20,7 @@ ReactDOM.render(
           <SignInPage />
         </Route>
         <Route exact path={['/all', '/active', '/completed']}>
-          <AppView />
+          <TodoListPage />
         </Route>
         <Redirect to="/signin" />
       </Router>

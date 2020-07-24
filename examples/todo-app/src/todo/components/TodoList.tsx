@@ -4,7 +4,7 @@ import { useLocation } from 'react-router';
 import { useObservable, useViewModel } from '@neon/react';
 
 import { getFilterFromPath } from '../../common/utils/filiter';
-import { TodoItemView } from './TodoItem.view';
+import { TodoItemView } from './TodoItem';
 import { TodoListViewModel } from '../viewModels/todoList.viewModel';
 
 export const TodoListView: React.FC = () => {

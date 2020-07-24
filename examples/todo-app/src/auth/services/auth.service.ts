@@ -1,19 +1,16 @@
 import { BehaviorSubject } from 'rxjs';
+import { inject } from 'inversify';
 
 import { Injectable, ScopeService } from '@neon/core';
 
 import { AppScope } from '../../scopes';
-import { StorageService } from '../../common/services/storage.service';
 import { User } from '../models/user.model';
 
 @Injectable()
 export class AuthService {
   private readonly activeUser = new BehaviorSubject<User | null>(null);
 
-  constructor(
-    private readonly scopeService: ScopeService,
-    private readonly storageService: StorageService,
-  ) {}
+  constructor(@inject(ScopeService) private readonly scopeService: ScopeService) {}
 
   $activeUser = this.activeUser.asObservable();
 

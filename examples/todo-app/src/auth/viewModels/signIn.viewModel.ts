@@ -1,4 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
+import { inject } from 'inversify';
 
 import { Injectable } from '@neon/core';
 
@@ -8,7 +9,7 @@ import { AuthService } from '../services/auth.service';
 export class SignInViewModel {
   private readonly userId = new BehaviorSubject<string>('');
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(@inject(AuthService) private readonly authService: AuthService) {}
 
   $userId = this.userId.asObservable();
 

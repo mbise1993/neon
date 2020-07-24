@@ -22,5 +22,5 @@ export function useInject<T1, T2, T3, T4, T5>(...types: [ClassType<any>]) {
     instancesRef.current = types.map(type => container.get(type));
   }
 
-  return instancesRef.current;
+  return types.length === 1 ? instancesRef.current[0] : instancesRef.current;
 }

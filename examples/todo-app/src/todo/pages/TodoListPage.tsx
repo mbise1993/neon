@@ -1,12 +1,15 @@
 import React from 'react';
 
-import { AppViewModel } from '../viewModels/app.viewModel';
-import { TodoListFooter } from '../../todo/views/TodoListFooter.view';
-import { TodoListView } from '../../todo/views/TodoList.view';
-import { useObservable, useViewModel } from '../../common/hooks';
+import { useObservable, useViewModel } from '@neon/react';
 
-export const AppView: React.FC = () => {
-  const vm = useViewModel(AppViewModel);
+import { TodoListFooter } from '../components/TodoListFooter';
+import { TodoListView } from '../components/TodoList';
+import { TodoListViewModel } from '../viewModels/todoList.viewModel';
+
+export const TodoListPage: React.FC = () => {
+  const vm = useViewModel(TodoListViewModel, {
+    filter: 'all',
+  });
 
   const newItemText = useObservable(vm.$newItemText, '');
   const hasItems = useObservable(vm.$hasItems, false);

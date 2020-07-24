@@ -1,9 +1,11 @@
+import { BehaviorSubject } from 'rxjs';
+import { inject } from 'inversify';
+
 import { Injectable } from '@neon/core';
 import { ViewModel } from '@neon/react';
 
-import { BehaviorSubject } from 'rxjs';
-import { TodoItem } from 'todo/models/todoItem.model';
-import { TodoListService } from 'todo/services/todoList.service';
+import { TodoItem } from '../models/todoItem.model';
+import { TodoListService } from '../services/todoList.service';
 
 interface Props {
   todoItem: TodoItem;
@@ -14,7 +16,7 @@ export class TodoItemViewModel extends ViewModel<Props> {
   private readonly editText = new BehaviorSubject('');
   private readonly isEditing = new BehaviorSubject(false);
 
-  constructor(private readonly todoListService: TodoListService) {
+  constructor(@inject(TodoListService) private readonly todoListService: TodoListService) {
     super();
   }
 
