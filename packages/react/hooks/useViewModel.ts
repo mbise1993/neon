@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Type } from '../../graphql/utils';
-import { useContainer } from '../components';
-import { ViewModel } from '../viewModels';
+import { ClassType } from '../utils/types';
+import { useContainer } from './useContainer';
+import { ViewModel } from '../viewModels/viewModel';
 
 const isShallowEqual = (a: any, b: any) => {
   if (a === b) return true;
@@ -26,10 +26,13 @@ const isShallowEqual = (a: any, b: any) => {
   return length === Object.keys(b).length;
 };
 
-export function useViewModel<T extends ViewModel>(type: Type<T>): T;
-export function useViewModel<TProps, T extends ViewModel<TProps>>(type: Type<T>, props: TProps): T;
+export function useViewModel<T extends ViewModel>(type: ClassType<T>): T;
 export function useViewModel<TProps, T extends ViewModel<TProps>>(
-  type: Type<T>,
+  type: ClassType<T>,
+  props: TProps,
+): T;
+export function useViewModel<TProps, T extends ViewModel<TProps>>(
+  type: ClassType<T>,
   props?: TProps,
 ): T {
   const container = useContainer();

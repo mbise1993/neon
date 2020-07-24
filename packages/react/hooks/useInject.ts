@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { Type } from '../../core/utils/types';
+import { ClassType } from '../utils/types';
 import { useContainer } from './useContainer';
 
-export const useInject = <T>(type: Type<T>): T => {
+export const useInject = <T>(type: ClassType<T>): T => {
   const container = useContainer();
   const instanceRef = React.useRef(container.get(type));
 

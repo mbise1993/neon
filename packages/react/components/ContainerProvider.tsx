@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container } from 'inversify';
+
+import { Container } from '@neon/core';
 
 export const ContainerContext = React.createContext<Container | null>(null);
 
