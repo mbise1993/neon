@@ -7,6 +7,6 @@ export class AppService {
   constructor(private readonly authService: AuthService) {}
 
   public getActiveUser() {
-    return this.authService.loggedInUser!;
+    return this.authService.getLoggedInUser()!;
   }
 }

@@ -7,9 +7,16 @@
     "url": "https://www.github.com/mbise1993"
   },
   "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "parcel index.html",
-    "test": "jest --watch"
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc -p ./tsconfig.json",
+    "test": "jest --watch",
+    "prepublish": "npm run build && cp ./package.json ./dist/package.json"
+  },
+  "publishConfig": {
+    "directory": "./dist"
   },
   "dependencies": {
     "inversify": "^5.0.1",
@@ -19,6 +26,9 @@
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "reflect-metadata": "^0.1.13"
+    "jest": "^26.0.1",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.3"
   }
 }

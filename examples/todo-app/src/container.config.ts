@@ -10,6 +10,8 @@ export const configureContainer = () => {
     skipBaseClassChecks: true,
   });
 
+  NeonCoreModule.install(container);
+
   container.bind(Container).toConstantValue(container);
 
   container
@@ -18,8 +20,6 @@ export const configureContainer = () => {
     .inSingletonScope();
 
   container.load(authModule, commonModule);
-
-  NeonCoreModule.install(container);
 
   return container;
 };

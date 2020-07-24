@@ -10,13 +10,22 @@ export interface ScopedProps {
 }
 
 export const Scoped: React.FC<ScopedProps> = ({ scopes, children }) => {
+  const [areScopesAttached, setScopesAttached] = React.useState(false);
   const scopeService = useInject(ScopeService);
 
   React.useEffect(() => {
     scopes.forEach(scope => {
       scopeService.attach(scope);
     });
+
+    setScopesAttached(true);
+
+    return () => {
+      scopes.forEach(scope => {
+        scopeService.detach(scope);
+      });
+    };
   }, []);
 
-  return children;
+  return areScopesAttached ? children : null;
 };

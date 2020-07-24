@@ -4,8 +4,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Redirect, Route, HashRouter as Router } from 'react-router-dom';
 
-import { ContainerProvider } from '@neon/react';
+import { ContainerProvider, Scoped } from '@neon/react';
 
+import { AppScope } from './scopes';
 import { configureContainer } from './container.config';
 import { SignInPage } from './auth/pages/SignInPage';
 import { TodoListPage } from './todo/pages/TodoListPage';
@@ -20,7 +21,9 @@ ReactDOM.render(
           <SignInPage />
         </Route>
         <Route exact path={['/all', '/active', '/completed']}>
-          <TodoListPage />
+          <Scoped scopes={[AppScope.LOGGED_IN]}>
+            <TodoListPage />
+          </Scoped>
         </Route>
         <Redirect to="/signin" />
       </Router>

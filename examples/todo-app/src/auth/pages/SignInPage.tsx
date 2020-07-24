@@ -9,8 +9,8 @@ export const SignInPage: React.FC = () => {
   const history = useHistory();
   const vm = useInject(SignInViewModel);
 
-  const onSignInClick = async () => {
-    const success = await vm.signIn();
+  const onSignInClick = () => {
+    const success = vm.signIn();
     if (success) {
       history.push('/all');
     }

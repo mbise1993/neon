@@ -7,10 +7,16 @@
     "url": "https://www.github.com/mbise1993"
   },
   "license": "MIT",
-  "source": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "parcel index.html",
-    "test": "jest --watch"
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc -p ./tsconfig.json",
+    "test": "jest --watch",
+    "prepublish": "npm run build && cp ./package.json ./dist/package.json"
+  },
+  "publishConfig": {
+    "directory": "./dist"
   },
   "peerDependencies": {
     "@neon/core": "^0.1.0",
@@ -19,7 +25,10 @@
   },
   "devDependencies": {
     "@neon/core": "0.1.0",
+    "jest": "^26.0.1",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.3"
   }
 }

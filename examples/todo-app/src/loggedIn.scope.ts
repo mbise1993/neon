@@ -8,7 +8,7 @@ import { todoModule } from './todo/todo.module';
 export class LoggedInScope implements IScope {
   onAttach(container: Container) {
     const authService = container.get(AuthService);
-    if (!authService.loggedInUser) {
+    if (!authService.getLoggedInUser()) {
       throw new Error('Please log in to continue');
     }
 
