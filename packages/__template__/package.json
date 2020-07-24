@@ -1,0 +1,17 @@
+{
+  "name": "@neon/package-name",
+  "version": "0.1.0",
+  "description": "Template for new Neon packages",
+  "author": {
+    "name": "Matt Bise",
+    "url": "https://www.github.com/mbise1993"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "parcel index.html",
+    "test": "jest --watch"
+  },
+  "dependencies": {},
+  "peerDependencies": {},
+  "devDependencies": {}
+}
