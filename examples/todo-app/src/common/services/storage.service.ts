@@ -1,6 +1,6 @@
-import { injectable } from 'inversify';
+import { Injectable } from '@neon/core';
 
-@injectable()
+@Injectable()
 export class StorageService {
   getItem<T>(key: string): T | null {
     const item = localStorage.getItem(key);

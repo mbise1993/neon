@@ -1,10 +1,11 @@
 import React from 'react';
 import { useLocation } from 'react-router';
 
+import { useObservable, useViewModel } from '@neon/react';
+
 import { getFilterFromPath } from '../../common/utils/filiter';
 import { TodoItemView } from './TodoItem.view';
 import { TodoListViewModel } from '../viewModels/todoList.viewModel';
-import { useObservable, useViewModel } from '../../common/hooks';
 
 export const TodoListView: React.FC = () => {
   const location = useLocation();

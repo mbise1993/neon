@@ -1,42 +1,37 @@
-import { injectable } from 'inversify';
-
 import { combineLatest } from 'rxjs';
-import { Filter } from '../../common/utils/filiter';
 import { map } from 'rxjs/operators';
-import { TodoItemFields } from '../api/todoItemFields.generated';
-import { TodoItemService } from '../services/todoItem.service';
+
+import { Injectable } from '@neon/core';
+import { ViewModel } from '@neon/react';
+
+import { Filter } from '../../common/utils/filiter';
+import { TodoItem } from 'todo/models/todoItem.model';
 import { TodoListService } from '../services/todoList.service';
-import { ViewModel } from '../../common/viewModels';
 
 interface Props {
   filter: Filter;
 }
 
-@injectable()
+@Injectable()
 export class TodoListViewModel extends ViewModel<Props> {
-  constructor(
-    private readonly todoListService: TodoListService,
-    private readonly todoItemService: TodoItemService,
-  ) {
+  constructor(private readonly todoListService: TodoListService) {
     super();
   }
 
-  $filteredItems = combineLatest([this.todoListService.items, this.$props]).pipe(
+  public $filteredItems = combineLatest([this.todoListService.items, this.$props]).pipe(
     map(([items, props]) => this.filterItems(items, props.filter)),
   );
 
-  async deleteItem(itemId: string) {
-    await this.todoItemService.deleteItem.execute({
-      id: itemId,
-    });
+  public deleteItem(itemId: string) {
+    this.todoListService.deleteItem(itemId);
   }
 
-  private filterItems(items: TodoItemFields[], filter: Filter) {
+  private filterItems(items: TodoItem[], filter: Filter) {
     return items.filter(item => {
       if (filter === 'active') {
-        return !item.done;
+        return !item.isComplete();
       } else if (filter === 'completed') {
-        return item.done;
+        return item.isComplete();
       } else {
         return items;
       }

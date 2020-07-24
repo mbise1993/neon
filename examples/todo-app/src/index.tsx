@@ -4,9 +4,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Redirect, Route, HashRouter as Router } from 'react-router-dom';
 
+import { ContainerProvider } from '@neon/react';
+
 import { AppView } from './app/views/App.view';
 import { configureContainer } from './container.config';
-import { ContainerProvider } from './common/components';
 import { SignInPage } from './auth/views/SignInPage.view';
 
 const container = configureContainer();

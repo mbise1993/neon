@@ -1,16 +1,14 @@
-import { injectable } from 'inversify';
+import { BehaviorSubject } from 'rxjs';
+
+import { Injectable } from '@neon/core';
 
 import { AuthService } from '../services/auth.service';
-import { BehaviorSubject } from 'rxjs';
-import { ViewModel } from '../../common/viewModels';
 
-@injectable()
-export class SignInViewModel extends ViewModel {
+@Injectable()
+export class SignInViewModel {
   private readonly userId = new BehaviorSubject<string>('');
 
-  constructor(private readonly authService: AuthService) {
-    super();
-  }
+  constructor(private readonly authService: AuthService) {}
 
   $userId = this.userId.asObservable();
 
@@ -25,9 +23,5 @@ export class SignInViewModel extends ViewModel {
     }
 
     return success;
-  }
-
-  async tryRestoreSession() {
-    return this.authService.tryRestoreSession();
   }
 }

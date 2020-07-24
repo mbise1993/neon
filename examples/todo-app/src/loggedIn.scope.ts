@@ -1,11 +1,10 @@
-import { Container, injectable } from 'inversify';
+import { Container, Injectable, IScope } from '@neon/core';
 
 import { appModule } from './app/app.module';
 import { AuthService } from './auth/services/auth.service';
-import { IScope } from './common/services/scope.service';
 import { todoModule } from './todo/todo.module';
 
-@injectable()
+@Injectable()
 export class LoggedInScope implements IScope {
   onAttach(container: Container) {
     const authService = container.get(AuthService);

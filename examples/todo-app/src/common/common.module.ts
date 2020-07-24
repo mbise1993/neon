@@ -1,7 +1,9 @@
-import { ContainerModule } from 'inversify';
+import { ContainerModule } from '@neon/core';
 
 import { StorageService } from './services/storage.service';
 
 export const commonModule = new ContainerModule(bind => {
-  bind(StorageService).toSelf().inSingletonScope();
+  bind(StorageService)
+    .toSelf()
+    .inSingletonScope();
 });

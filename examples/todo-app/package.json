@@ -13,6 +13,8 @@
     "test": "jest --watch"
   },
   "dependencies": {
+    "@neon/core": "0.1.0",
+    "@neon/react": "0.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },

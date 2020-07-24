@@ -1,12 +1,12 @@
-import { injectable } from 'inversify';
+import { Injectable } from '@neon/core';
 
 import { AuthService } from '../../auth/services/auth.service';
 
-@injectable()
+@Injectable()
 export class AppService {
   constructor(private readonly authService: AuthService) {}
 
-  get activeUser() {
+  public getActiveUser() {
     return this.authService.loggedInUser!;
   }
 }

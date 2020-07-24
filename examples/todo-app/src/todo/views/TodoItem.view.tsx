@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { TodoItemFields } from '../api/todoItemFields.generated';
+import { useObservable, useViewModel } from '@neon/react';
+
+import { TodoItem } from '../models/todoItem.model';
 import { TodoItemViewModel } from '../viewModels/todoItem.viewModel';
-import { useObservable, useViewModel } from '../../common/hooks';
 
 interface Props {
-  todoItem: TodoItemFields;
+  todoItem: TodoItem;
 }
 
 export const TodoItemView: React.FC<Props> = ({ todoItem }) => {
@@ -19,7 +20,7 @@ export const TodoItemView: React.FC<Props> = ({ todoItem }) => {
   const onKeyDown = async (e: React.KeyboardEvent) => {
     // Enter
     if (e.keyCode === 13) {
-      await vm.commitEditText();
+      vm.commitEditText();
     }
   };
 
@@ -28,7 +29,7 @@ export const TodoItemView: React.FC<Props> = ({ todoItem }) => {
     className += 'editing';
   }
 
-  if (vm.todoItem.done) {
+  if (vm.getTodoItem().isComplete()) {
     className += ' complete';
   }
 
@@ -38,10 +39,10 @@ export const TodoItemView: React.FC<Props> = ({ todoItem }) => {
         <input
           className="toggle"
           type="checkbox"
-          checked={todoItem.done}
+          checked={todoItem.isComplete()}
           onChange={() => vm.toggleComplete()}
         />
-        <label>{vm.todoItem.task}</label>
+        <label>{vm.getTodoItem().getText()}</label>
         <button className="destroy" onClick={() => vm.deleteItem()}></button>
       </div>
       <input

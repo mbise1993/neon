@@ -1,78 +1,37 @@
-import { ApolloCache, ApolloQueryResult, FetchResult } from '@apollo/client';
 import { BehaviorSubject } from 'rxjs';
-import { injectable } from 'inversify';
 
-import { AppService } from '../../app/services/app.service';
-import {
-  CreateTodoItem,
-  CreateTodoItemDocument,
-  CreateTodoItemVariables,
-} from '../api/CreateTodoItem.generated';
-import {
-  GetTodoItems,
-  GetTodoItemsDocument,
-  GetTodoItemsVariables,
-} from '../api/GetTodoItems.generated';
-import { GraphQLClient } from '../../common/services/graphQLClient';
-import { GraphQLService } from '../../common/services/graphQL.service';
-import { TodoItemFields } from '../api/todoItemFields.generated';
+import { Injectable } from '@neon/core';
 
-@injectable()
-export class TodoListService extends GraphQLService {
-  readonly items = new BehaviorSubject<TodoItemFields[]>([]);
+import { TodoItem } from '../models/todoItem.model';
 
-  constructor(client: GraphQLClient, appService: AppService) {
-    super(client);
+@Injectable()
+export class TodoListService {
+  readonly items = new BehaviorSubject<TodoItem[]>([]);
 
-    this.getItems.watch({
-      userId: parseInt(appService.activeUser.id),
-    });
+  public loadItems() {
+    this.items.next([
+      new TodoItem('1', 'Buy some beer'),
+      new TodoItem('2', 'Write some code'),
+      new TodoItem('3', 'Get some sleep'),
+    ]);
   }
 
-  get id() {
-    return '1';
+  public addItem(text: string) {
+    const id = this.items.value.length + 1;
+    this.items.next([...this.items.value, new TodoItem(id.toString(), text)]);
   }
 
-  getItems = this.createQuery<GetTodoItems, GetTodoItemsVariables>({
-    document: GetTodoItemsDocument,
-    onNext: result => this.onNext(result),
-  });
-
-  addItem = this.createMutation<CreateTodoItem, CreateTodoItemVariables>({
-    document: CreateTodoItemDocument,
-    updateCache: (cache, result) => this.updateCacheAfterCreate(cache, result),
-  });
-
-  private updateCacheAfterCreate(
-    cache: ApolloCache<CreateTodoItem>,
-    result: FetchResult<CreateTodoItem>,
-  ) {
-    if (!result.data) {
-      return;
+  public updateItem(id: string, text: string, isComplete: boolean) {
+    const item = this.items.value.find(i => i.getId() === id);
+    if (!item) {
+      throw new Error(`Unable to find item with ID '${id}'`);
     }
 
-    const cachedData = cache.readQuery<GetTodoItems, GetTodoItemsVariables>({
-      query: GetTodoItemsDocument,
-    });
-
-    if (!cachedData) {
-      return;
-    }
-
-    cache.writeQuery<GetTodoItems, GetTodoItemsVariables>({
-      query: GetTodoItemsDocument,
-      data: {
-        ...cachedData,
-        todos: [...cachedData.todos, result.data.createTodo],
-      },
-    });
+    item.setText(text);
+    item.setComplete(isComplete);
   }
 
-  private onNext(result: ApolloQueryResult<GetTodoItems>) {
-    if (!result.data?.todos) {
-      return;
-    }
-
-    this.items.next(result.data.todos as any);
+  public deleteItem(id: string) {
+    this.items.next(this.items.value.filter(item => item.getId() !== id));
   }
 }
