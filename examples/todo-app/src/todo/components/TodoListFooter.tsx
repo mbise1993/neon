@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router';
 
-import { getFilterFromPath } from '../../common/utils/filiter';
+import { Filter, getFilterFromPath } from '../../common/utils/filter';
 
 interface Props {
   itemsLeft: number;
@@ -16,22 +16,22 @@ export const TodoListFooter: React.FC<Props> = ({ itemsLeft, onClearCompletedCli
     <footer className="footer">
       {/* <!-- This should be `0 items left` by default --> */}
       <span className="todo-count">
-        <strong>{itemsLeft}</strong> item left
+        <strong>{itemsLeft}</strong> items left
       </span>
       {/* <!-- Remove this if you don't implement routing --> */}
       <ul className="filters">
         <li>
-          <a className={filter === 'all' ? 'selected' : ''} href="#/all">
+          <a className={filter === Filter.ALL ? 'selected' : ''} href="#/all">
             All
           </a>
         </li>
         <li>
-          <a className={filter === 'active' ? 'selected' : ''} href="#/active">
+          <a className={filter === Filter.ACTIVE ? 'selected' : ''} href="#/active">
             Active
           </a>
         </li>
         <li>
-          <a className={filter === 'completed' ? 'selected' : ''} href="#/completed">
+          <a className={filter === Filter.COMPLETED ? 'selected' : ''} href="#/completed">
             Completed
           </a>
         </li>

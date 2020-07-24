@@ -1,9 +1,9 @@
 import React from 'react';
 import { Observable } from 'rxjs';
 
-export function useObservable<T>(observable: Observable<T>): T | undefined;
-export function useObservable<T>(observable: Observable<T>, defaultValue: T): T;
-export function useObservable<T>(observable: Observable<T>, defaultValue?: T) {
+export function useObserve<T>(observable: Observable<T>): T | undefined;
+export function useObserve<T>(observable: Observable<T>, defaultValue: T): T;
+export function useObserve<T>(observable: Observable<T>, defaultValue?: T) {
   const [currentValue, setCurrentValue] = React.useState(defaultValue);
 
   React.useEffect(() => {

@@ -1,12 +1,16 @@
-export type Filter = 'all' | 'active' | 'completed';
+export enum Filter {
+  ALL,
+  ACTIVE,
+  COMPLETED,
+}
 
 export const getFilterFromPath = (path: string): Filter => {
   switch (path) {
     case '/active':
-      return 'active';
+      return Filter.ACTIVE;
     case '/completed':
-      return 'completed';
+      return Filter.COMPLETED;
     default:
-      return 'all';
+      return Filter.ALL;
   }
 };

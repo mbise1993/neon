@@ -1,19 +1,20 @@
 import React from 'react';
 
-import { useObservable, useViewModel } from '@neon/react';
+import { useBind, useObserve, useViewModel } from '@neon/react';
 
+import { Filter } from '../../common/utils/filter';
 import { TodoListFooter } from '../components/TodoListFooter';
 import { TodoListView } from '../components/TodoList';
 import { TodoListViewModel } from '../viewModels/todoList.viewModel';
 
 export const TodoListPage: React.FC = () => {
   const vm = useViewModel(TodoListViewModel, {
-    filter: 'all',
+    filter: Filter.ALL,
   });
 
-  const newItemText = useObservable(vm.$newItemText, '');
-  const hasItems = useObservable(vm.$hasItems, false);
-  const itemsLeftCount = useObservable(vm.$itemsLeftCount, 0);
+  const [newItemText, setNewItemText] = useBind(vm.$newItemText);
+  const hasItems = useObserve(vm.$hasItems, false);
+  const itemsLeftCount = useObserve(vm.$itemsLeftCount, 0);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     // Enter
@@ -31,7 +32,7 @@ export const TodoListPage: React.FC = () => {
           className="new-todo"
           placeholder="What needs to be done?"
           value={newItemText}
-          onChange={e => vm.setNewItemText(e.target.value)}
+          onChange={e => setNewItemText(e.target.value)}
           onKeyDown={onKeyDown}
         />
       </header>

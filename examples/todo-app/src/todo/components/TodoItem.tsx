@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { useObservable, useViewModel } from '@neon/react';
+import { useBind, useObserve, useViewModel } from '@neon/react';
 
-import { TodoItem } from '../models/todoItem.model';
+import { Model, TodoItemFields } from '../models/todoItem.model';
 import { TodoItemViewModel } from '../viewModels/todoItem.viewModel';
 
 interface Props {
-  todoItem: TodoItem;
+  todoItem: Model<TodoItemFields>;
 }
 
 export const TodoItemView: React.FC<Props> = ({ todoItem }) => {
@@ -14,8 +14,9 @@ export const TodoItemView: React.FC<Props> = ({ todoItem }) => {
     todoItem,
   });
 
-  const editText = useObservable(vm.$editText, '');
-  const isEditing = useObservable(vm.$isEditing, false);
+  const [editText, setEditText] = useBind(vm.$editText);
+  const isEditing = useObserve(vm.$isEditing, false);
+  const boundItem = useObserve(vm.getTodoItem().$fields, vm.getTodoItem().getFields());
 
   const onKeyDown = async (e: React.KeyboardEvent) => {
     // Enter
@@ -29,7 +30,7 @@ export const TodoItemView: React.FC<Props> = ({ todoItem }) => {
     className += 'editing';
   }
 
-  if (vm.getTodoItem().isComplete()) {
+  if (vm.getTodoItem().get('isDone')) {
     className += ' complete';
   }
 
@@ -39,16 +40,16 @@ export const TodoItemView: React.FC<Props> = ({ todoItem }) => {
         <input
           className="toggle"
           type="checkbox"
-          checked={todoItem.isComplete()}
+          checked={boundItem.isDone}
           onChange={() => vm.toggleComplete()}
         />
-        <label>{vm.getTodoItem().getText()}</label>
+        <label>{boundItem.text}</label>
         <button className="destroy" onClick={() => vm.deleteItem()}></button>
       </div>
       <input
         className="edit"
         value={editText}
-        onChange={e => vm.setEditText(e.target.value)}
+        onChange={e => setEditText(e.target.value)}
         onKeyDown={onKeyDown}
       />
     </li>
