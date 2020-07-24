@@ -1,24 +1,24 @@
 {
-  "name": "@neon/react",
+  "name": "neon-todo-app-example",
   "version": "0.1.0",
-  "description": "React library for Neon apps",
+  "description": "Example todo app that uses the Neon framework",
   "author": {
     "name": "Matt Bise",
     "url": "https://www.github.com/mbise1993"
   },
   "license": "MIT",
   "scripts": {
+    "start:dev": "parcel index.html",
     "build": "parcel index.html",
     "test": "jest --watch"
   },
-  "peerDependencies": {
-    "@neon/core": "^0.1.0",
+  "dependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
   "devDependencies": {
-    "@neon/core": "0.1.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "dotenv": "8.2.0",
+    "dotenv-expand": "5.1.0",
+    "parcel-bundler": "^1.12.4"
   }
 }
