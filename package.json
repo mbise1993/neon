@@ -1,0 +1,16 @@
+{
+  "name": "neon",
+  "version": "0.1.0",
+  "description": "Neon client-side framework",
+  "author": {
+    "name": "Matt Bise",
+    "url": "https://www.github.com/mbise1993"
+  },
+  "license": "MIT",
+  "scripts": {},
+  "devDependencies": {
+    "husky": "^4.2.5",
+    "lerna": "^3.22.1",
+    "lint-staged": "^10.2.11"
+  }
+}

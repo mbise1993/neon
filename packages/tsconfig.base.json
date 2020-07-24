@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "module": "commonjs",
+    "declaration": true,
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "strict": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "target": "es2017"
+  },
+  "exclude": ["../node_modules"]
+}
