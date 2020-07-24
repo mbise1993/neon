@@ -7,9 +7,16 @@
     "url": "https://www.github.com/mbise1993"
   },
   "license": "MIT",
+  "files": [
+    "dist/**/*"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "parcel index.html",
-    "test": "jest --watch"
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc -p ./tsconfig.json",
+    "test": "jest --watch",
+    "prepublish": "npm run build && cp ./package.json ./dist/package.json"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.50",

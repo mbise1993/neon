@@ -1,1 +1,7 @@
-export { Container, ContainerModule, injectable as Injectable } from 'inversify';
+export {
+  Container,
+  ContainerModule,
+  inject as Inject,
+  injectable as Injectable,
+  multiInject as MultiInject,
+} from 'inversify';

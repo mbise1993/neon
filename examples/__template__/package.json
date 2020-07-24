@@ -1,7 +1,7 @@
 {
-  "name": "@neon/todo-app",
+  "name": "@neon/example-template",
   "version": "0.1.0",
-  "description": "Example todo app that uses the Neon framework",
+  "description": "Template for new Neon examples",
   "author": {
     "name": "Matt Bise",
     "url": "https://www.github.com/mbise1993"
@@ -20,10 +20,7 @@
     "react-dom": "^16.13.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "reflect-metadata": "^0.1.13",
-    "todo": "^1.1.0",
-    "todomvc-app-css": "^2.3.0",
-    "todomvc-common": "^1.0.5"
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "dotenv": "8.2.0",

@@ -10,8 +10,10 @@
   "scripts": {},
   "private": true,
   "workspaces": [
-    "packages/*",
-    "examples/*"
+    "packages/core",
+    "packages/graphql",
+    "packages/react",
+    "examples/todo-app"
   ],
   "devDependencies": {
     "@testing-library/react-hooks": "^3.2.1",
