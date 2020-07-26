@@ -6,7 +6,7 @@ import { todoModule } from './todo/todo.module';
 
 @Injectable()
 export class LoggedInScope implements IScope {
-  onAttach(container: Container) {
+  public onAttach(container: Container) {
     const authService = container.get(AuthService);
     if (!authService.getLoggedInUser()) {
       throw new Error('Please log in to continue');
@@ -15,7 +15,7 @@ export class LoggedInScope implements IScope {
     container.load(appModule, todoModule);
   }
 
-  onDetach(container: Container) {
+  public onDetach(container: Container) {
     container.unload(appModule, todoModule);
   }
 }

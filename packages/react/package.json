@@ -21,7 +21,8 @@
   "peerDependencies": {
     "@neon/core": "^0.1.0",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "rxjs": "^6.6.0"
   },
   "devDependencies": {
     "@neon/core": "0.1.0",
@@ -29,6 +30,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "rimraf": "^3.0.2",
+    "rxjs": "^6.6.0",
     "typescript": "^3.9.3"
   }
 }

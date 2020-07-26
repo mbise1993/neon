@@ -25,10 +25,10 @@
   },
   "peerDependencies": {
     "@neon/core": "^0.1.0",
-    "rxjs": "^6.5.5"
+    "rxjs": "^6.6.0"
   },
   "devDependencies": {
     "@neon/core": "0.1.0",
-    "rxjs": "^6.5.5"
+    "rxjs": "^6.6.0"
   }
 }

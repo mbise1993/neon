@@ -1,54 +1,72 @@
-import { BehaviorSubject } from 'rxjs';
-import { inject } from 'inversify';
+import { Inject, Injectable, Model, Observable } from '@neon/core';
 
-import { Injectable } from '@neon/core';
-import { ViewModel } from '@neon/react';
-
-import { Model, TodoItemFields } from '../models/todoItem.model';
+import { TodoItemFields } from '../models/todoItem.model';
 import { TodoListService } from '../services/todoList.service';
 
-interface Props {
-  todoItem: Model<TodoItemFields>;
-}
-
 @Injectable()
-export class TodoItemViewModel extends ViewModel<Props> {
-  constructor(@inject(TodoListService) private readonly todoListService: TodoListService) {
+export class TodoItemViewModel extends Observable {
+  private model!: Model<TodoItemFields>;
+  private editText = '';
+  private isEditing = false;
+
+  constructor(@Inject(TodoListService) private todoListService: TodoListService) {
     super();
   }
 
-  public $editText = new BehaviorSubject('');
-  public $isEditing = new BehaviorSubject(false);
+  public setModel(model: Model<TodoItemFields>) {
+    this.model = model;
+  }
 
-  public getTodoItem() {
-    return this.$props.value.todoItem;
+  public getText() {
+    return this.model.get('text');
+  }
+
+  public getIsDone() {
+    return this.model.get('isDone');
+  }
+
+  public getEditText() {
+    return this.editText;
+  }
+
+  public setEditText(value: string) {
+    this.editText = value;
+    this.notify();
+  }
+
+  public getIsEditing() {
+    return this.isEditing;
   }
 
   public startEditing() {
-    this.$editText.next(this.getTodoItem().get('text'));
-    this.$isEditing.next(true);
+    this.editText = this.model.get('text');
+    this.isEditing = true;
+    this.notify();
   }
 
   public commitEditText() {
     this.todoListService.updateItem(
-      this.getTodoItem().get('id'),
-      this.$editText.value,
-      this.getTodoItem().get('isDone'),
+      this.model.get('id'),
+      this.getEditText(),
+      this.model.get('isDone'),
     );
 
-    this.$editText.next('');
-    this.$isEditing.next(false);
+    this.editText = '';
+    this.isEditing = false;
+    this.notify();
   }
 
   public toggleComplete() {
     this.todoListService.updateItem(
-      this.getTodoItem().get('id'),
-      this.getTodoItem().get('text'),
-      !this.getTodoItem().get('isDone'),
+      this.model.get('id'),
+      this.model.get('text'),
+      !this.model.get('isDone'),
     );
+
+    this.notify();
   }
 
   public deleteItem() {
-    this.todoListService.deleteItem(this.getTodoItem().get('id'));
+    this.todoListService.deleteItem(this.model.get('id'));
   }
 }

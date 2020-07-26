@@ -1,20 +1,21 @@
 import React from 'react';
+import { useLocation } from 'react-router';
 
-import { useBind, useObserve, useViewModel } from '@neon/react';
+import { useViewModel } from '@neon/react';
 
-import { Filter } from '../../common/utils/filter';
+import { getFilterFromPath } from '../../common/utils/filter';
+import { TodoItem } from '..//components/TodoItem';
 import { TodoListFooter } from '../components/TodoListFooter';
-import { TodoListView } from '../components/TodoList';
+
 import { TodoListViewModel } from '../viewModels/todoList.viewModel';
 
 export const TodoListPage: React.FC = () => {
-  const vm = useViewModel(TodoListViewModel, {
-    filter: Filter.ALL,
-  });
+  const location = useLocation();
+  const vm = useViewModel(TodoListViewModel);
 
-  const [newItemText, setNewItemText] = useBind(vm.$newItemText);
-  const hasItems = useObserve(vm.$hasItems, false);
-  const itemsLeftCount = useObserve(vm.$itemsLeftCount, 0);
+  React.useEffect(() => {
+    vm.setFilter(getFilterFromPath(location.pathname));
+  }, [location]);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     // Enter
@@ -31,28 +32,33 @@ export const TodoListPage: React.FC = () => {
           autoFocus
           className="new-todo"
           placeholder="What needs to be done?"
-          value={newItemText}
-          onChange={e => setNewItemText(e.target.value)}
+          value={vm.getNewItemText()}
+          onChange={e => vm.setNewItemText(e.target.value)}
           onKeyDown={onKeyDown}
         />
       </header>
       {/* <!-- This section should be hidden by default and shown when there are todos --> */}
-      {hasItems && (
+      {vm.hasItems() && (
         <section className="main">
           <input
             id="toggle-all"
             className="toggle-all"
             type="checkbox"
-            checked={itemsLeftCount === 0}
+            checked={vm.getItemsLeftCount() === 0}
             onChange={() => vm.toggleAll()}
           />
           <label htmlFor="toggle-all">Mark all as complete</label>
-          <TodoListView />
+          <ul className="todo-list">
+            {/* <!-- List items should get the class `editing` when editing and `completed` when marked as completed --> */}
+            {vm.getFilteredItems().map(item => (
+              <TodoItem key={item.get('id')} todoItem={item} />
+            ))}
+          </ul>
         </section>
       )}
       {/* <!-- This footer should hidden by default and shown when there are todos --> */}
       <TodoListFooter
-        itemsLeft={itemsLeftCount}
+        itemsLeft={vm.getItemsLeftCount()}
         onClearCompletedClick={() => vm.clearCompletedItems()}
       />
     </section>

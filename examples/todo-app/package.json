@@ -17,6 +17,7 @@
     "@neon/core": "0.1.0",
     "@neon/react": "0.1.0",
     "common": "^0.2.5",
+    "inversify-inject-decorators": "^3.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router": "^5.2.0",

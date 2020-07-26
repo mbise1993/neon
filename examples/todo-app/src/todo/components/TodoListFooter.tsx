@@ -10,7 +10,9 @@ interface Props {
 
 export const TodoListFooter: React.FC<Props> = ({ itemsLeft, onClearCompletedClick }) => {
   const location = useLocation();
-  const filter = React.useMemo(() => getFilterFromPath(location.pathname), [location.pathname]);
+  const filter = React.useMemo(() => {
+    return getFilterFromPath(location.pathname);
+  }, [location.pathname]);
 
   return (
     <footer className="footer">

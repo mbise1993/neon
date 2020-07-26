@@ -1,49 +1,79 @@
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { inject } from 'inversify';
-import { map } from 'rxjs/operators';
-
-import { Injectable } from '@neon/core';
-import { ViewModel } from '@neon/react';
+import { Inject, Injectable, Observable } from '@neon/core';
 
 import { Filter } from '../../common/utils/filter';
-import { Model, TodoItemFields } from '../models/todoItem.model';
 import { TodoListService } from '../services/todoList.service';
 
-interface Props {
-  filter: Filter;
-}
-
 @Injectable()
-export class TodoListViewModel extends ViewModel<Props> {
-  constructor(@inject(TodoListService) private readonly todoListService: TodoListService) {
+export class TodoListViewModel extends Observable {
+  private newItemText = '';
+  private isToggleAllChecked = false;
+  private filter = Filter.ALL;
+
+  public constructor(@Inject(TodoListService) private todoListService: TodoListService) {
     super();
   }
 
-  public $newItemText = new BehaviorSubject('');
-  public $toggleAllChecked = new BehaviorSubject(false);
-  public $hasItems = this.todoListService.$items.pipe(map(items => items.length > 0));
-  public $itemsLeftCount = this.todoListService.$items.pipe(
-    map(items => items.filter(item => !item.get('isDone')).length),
-  );
-  public $filteredItems = combineLatest([this.todoListService.$items, this.$props]).pipe(
-    map(([items, props]) => this.filterItems(items, props.filter)),
-  );
+  public getNewItemText() {
+    return this.newItemText;
+  }
+
+  public setNewItemText(value: string) {
+    this.newItemText = value;
+    this.notify();
+  }
+
+  public getIsToggleAllChecked() {
+    return this.isToggleAllChecked;
+  }
+
+  public setIsToggleAllChecked(value: boolean) {
+    this.isToggleAllChecked = value;
+    this.notify();
+  }
+
+  public getFilter() {
+    return this.filter;
+  }
+
+  public setFilter(value: Filter) {
+    this.filter = value;
+    this.notify();
+  }
+
+  public hasItems() {
+    return this.todoListService.$items.getValue().length > 0;
+  }
+
+  public getItemsLeftCount() {
+    return this.todoListService.$items.getValue().filter(item => !item.get('isDone')).length;
+  }
+
+  public getFilteredItems() {
+    const items = this.todoListService.$items.getValue();
+    return items.filter(item => {
+      if (this.filter === Filter.ACTIVE) {
+        return !item.get('isDone');
+      } else if (this.filter === Filter.COMPLETED) {
+        return item.get('isDone');
+      } else {
+        return items;
+      }
+    });
+  }
 
   public addItem() {
-    this.todoListService.addItem(this.$newItemText.value);
-    this.$newItemText.next('');
+    this.todoListService.addItem(this.newItemText);
+    this.newItemText = '';
+    this.notify();
   }
 
   public toggleAll() {
     for (const item of this.todoListService.$items.value) {
-      this.todoListService.updateItem(
-        item.get('id'),
-        item.get('text'),
-        !this.$toggleAllChecked.value,
-      );
+      this.todoListService.updateItem(item.get('id'), item.get('text'), !this.isToggleAllChecked);
     }
 
-    this.$toggleAllChecked.next(!this.$toggleAllChecked.value);
+    this.isToggleAllChecked = !this.isToggleAllChecked;
+    this.notify();
   }
 
   public clearCompletedItems() {
@@ -51,21 +81,12 @@ export class TodoListViewModel extends ViewModel<Props> {
     for (const item of completedItems) {
       this.todoListService.deleteItem(item.get('id'));
     }
+
+    this.notify();
   }
 
   public deleteItem(itemId: string) {
     this.todoListService.deleteItem(itemId);
-  }
-
-  private filterItems(items: Model<TodoItemFields>[], filter: Filter) {
-    return items.filter(item => {
-      if (filter === Filter.ACTIVE) {
-        return !item.get('isDone');
-      } else if (filter === Filter.COMPLETED) {
-        return item.get('isDone');
-      } else {
-        return items;
-      }
-    });
+    this.notify();
   }
 }

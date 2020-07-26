@@ -1,13 +1,13 @@
 import React from 'react';
 import { useHistory } from 'react-router';
 
-import { useInject } from '@neon/react';
+import { useViewModel } from '@neon/react';
 
 import { SignInViewModel } from '../viewModels/signIn.viewModel';
 
 export const SignInPage: React.FC = () => {
   const history = useHistory();
-  const vm = useInject(SignInViewModel);
+  const vm = useViewModel(SignInViewModel);
 
   const onSignInClick = () => {
     const success = vm.signIn();

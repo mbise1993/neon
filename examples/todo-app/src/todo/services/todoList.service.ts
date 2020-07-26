@@ -1,8 +1,8 @@
 import { BehaviorSubject } from 'rxjs';
 
-import { Injectable } from '@neon/core';
+import { Injectable, Model } from '@neon/core';
 
-import { Model, TodoItemFields } from '../models/todoItem.model';
+import { TodoItemFields } from '../models/todoItem.model';
 
 @Injectable()
 export class TodoListService {
