@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router';
 
-import { useViewModel } from '@neon/react';
+import { useVm } from '@neon/react';
 
 import { getFilterFromPath } from '../../common/utils/filter';
 import { TodoItem } from '..//components/TodoItem';
@@ -11,11 +11,16 @@ import { TodoListViewModel } from '../viewModels/todoList.viewModel';
 
 export const TodoListPage: React.FC = () => {
   const location = useLocation();
-  const vm = useViewModel(TodoListViewModel);
+  const vm = useVm(TodoListViewModel, (vm, bind) => {
+    vm.filter.next(getFilterFromPath(location.pathname));
 
-  React.useEffect(() => {
-    vm.setFilter(getFilterFromPath(location.pathname));
-  }, [location]);
+    bind(vm.newItemText);
+    bind(vm.filter);
+    bind(vm.hasItems);
+    bind(vm.itemsLeftCount);
+    bind(vm.isToggleAllChecked);
+    bind(vm.filteredItems);
+  });
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     // Enter
@@ -32,13 +37,13 @@ export const TodoListPage: React.FC = () => {
           autoFocus
           className="new-todo"
           placeholder="What needs to be done?"
-          value={vm.getNewItemText()}
-          onChange={e => vm.setNewItemText(e.target.value)}
+          value={vm.newItemText.value}
+          onChange={e => vm.newItemText.next(e.target.value)}
           onKeyDown={onKeyDown}
         />
       </header>
       {/* <!-- This section should be hidden by default and shown when there are todos --> */}
-      {vm.hasItems() && (
+      {vm.hasItems.value && (
         <section className="main">
           <input
             id="toggle-all"

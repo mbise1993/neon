@@ -1,13 +1,63 @@
 import React from 'react';
+import { Observable, Subscription } from 'rxjs';
 
-import { Observable } from '@neon/core';
+import { Observable as NeonObservable } from '@neon/core';
 
 import { ClassType } from '../utils/types';
 import { useInject } from './useInject';
 
+type Create<T> = () => T;
+
+type Bind<T> = (observable: Observable<T>) => void;
+
+type Initialize<T> = (obj: T, bind: Bind<any>) => void;
+
+function isClassType<T>(obj: any): obj is ClassType<T> {
+  return !!obj.prototype && !!obj.prototype.constructor.name;
+}
+
+export function useVm<T>(TClass: ClassType<T>, initialize?: Initialize<T>): T;
+export function useVm<T>(
+  createOrClass: Create<T> | ClassType<T>,
+  initialize: Initialize<T> = () => {},
+): T {
+  let obj: T;
+  if (isClassType<T>(createOrClass)) {
+    obj = useInject(createOrClass);
+  } else {
+    const objRef = React.useRef(createOrClass());
+    obj = objRef.current;
+  }
+
+  const [subscriptions, setSubscriptions] = React.useState<Subscription[]>([]);
+
+  const [, updateState] = React.useState({});
+  const forceUpdate = React.useCallback(() => updateState({}), []);
+
+  const bind = <T>(observable: Observable<T>) => {
+    const subscription = observable.subscribe(() => {
+      forceUpdate();
+    });
+
+    setSubscriptions([...subscriptions, subscription]);
+  };
+
+  React.useEffect(() => {
+    initialize(obj, bind);
+
+    return () => {
+      subscriptions.forEach(subscription => {
+        subscription.unsubscribe();
+      });
+    };
+  }, []);
+
+  return obj;
+}
+
 type ViewModelInitializer<T> = (viewModel: T) => void;
 
-export function useViewModel<T extends Observable>(
+export function useViewModel<T extends NeonObservable>(
   TClass: ClassType<T>,
   initializer: ViewModelInitializer<T> = () => {},
 ): T {

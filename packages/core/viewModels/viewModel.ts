@@ -1,5 +1,7 @@
 import { Model } from 'models/model';
 
+type Subscriber = () => void;
+
 export abstract class ViewModel {
   private subscribers: Subscriber[] = [];
 

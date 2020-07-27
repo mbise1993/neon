@@ -4,4 +4,4 @@ export { useBind } from './hooks/useBind';
 export { useContainer } from './hooks/useContainer';
 export { useInject } from './hooks/useInject';
 export { useObserve, useObservable } from './hooks/useObserve';
-export { useViewModel } from './hooks/useViewModel';
+export { useViewModel, useVm } from './hooks/useViewModel';

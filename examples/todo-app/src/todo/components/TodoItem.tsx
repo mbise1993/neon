@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Model } from '@neon/core';
-import { useViewModel } from '@neon/react';
+import { useVm } from '@neon/react';
 
 import { TodoItemFields } from '../models/todoItem.model';
 import { TodoItemViewModel } from '../viewModels/todoItem.viewModel';
@@ -11,11 +11,13 @@ interface Props {
 }
 
 export const TodoItem: React.FC<Props> = ({ todoItem }) => {
-  const vm = useViewModel(TodoItemViewModel, vm => {
+  const vm = useVm(TodoItemViewModel, (vm, bind) => {
     vm.setModel(todoItem);
+    bind(vm.editText);
+    bind(vm.isEditing);
   });
 
-  const onKeyDown = async (e: React.KeyboardEvent) => {
+  const onKeyDown = (e: React.KeyboardEvent) => {
     // Enter
     if (e.keyCode === 13) {
       vm.commitEditText();
@@ -23,11 +25,11 @@ export const TodoItem: React.FC<Props> = ({ todoItem }) => {
   };
 
   let className = '';
-  if (vm.getIsEditing()) {
+  if (vm.isEditing.value) {
     className += 'editing';
   }
 
-  if (vm.getIsDone()) {
+  if (vm.isDone) {
     className += ' complete';
   }
 
@@ -37,16 +39,16 @@ export const TodoItem: React.FC<Props> = ({ todoItem }) => {
         <input
           className="toggle"
           type="checkbox"
-          checked={vm.getIsDone()}
+          checked={vm.isDone}
           onChange={() => vm.toggleComplete()}
         />
-        <label>{vm.getText()}</label>
+        <label>{vm.text}</label>
         <button className="destroy" onClick={() => vm.deleteItem()}></button>
       </div>
       <input
         className="edit"
-        value={vm.getEditText()}
-        onChange={e => vm.setEditText(e.target.value)}
+        value={vm.editText.value}
+        onChange={e => vm.editText.next(e.target.value)}
         onKeyDown={onKeyDown}
       />
     </li>
