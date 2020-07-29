@@ -1,11 +1,11 @@
-import { GraphQLClient } from './graphQlClient';
+import { GraphQlClient } from './graphQlClient';
 import { ObservableMutation, ObservableMutationOptions } from '../utils/observableMutation';
 import { ObservableQuery, ObservableQueryOptions } from '../utils/observableQuery';
 
 export abstract class GraphQlService {
   private readonly queries: ObservableQuery<any, any>[] = [];
 
-  constructor(protected readonly client: GraphQLClient) {}
+  constructor(protected readonly client: GraphQlClient) {}
 
   dispose() {
     this.queries.forEach(query => query.dispose());

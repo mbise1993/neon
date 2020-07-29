@@ -19,28 +19,31 @@ export class ObservableQuery<TResult, TVariables> {
   private observable?: ApolloObservableQuery<TResult, TVariables>;
   private subscriptions: Subscription[] = [];
 
-  $isLoading = new BehaviorSubject(false);
-  $error = new BehaviorSubject<GraphQLError | null>(null);
+  private readonly _isLoading = new BehaviorSubject(false);
+  private readonly _error = new BehaviorSubject<GraphQLError | null>(null);
 
   constructor(
     private readonly client: GraphQlClient,
     private readonly options: ObservableQueryOptions<TResult>,
   ) {}
 
-  async fetch(variables?: TVariables) {
+  public readonly isLoading$ = this._isLoading.asObservable();
+  public readonly error$ = this._error.asObservable();
+
+  public async fetch(variables?: TVariables) {
     try {
-      this.$isLoading.next(true);
+      this._isLoading.next(true);
       const result = await this.client.query<TResult, TVariables>({
         query: this.options.document,
         variables,
       });
 
-      this.$error.next(null);
+      this._error.next(null);
       return result;
     } catch (e) {
-      this.$error.next(e);
+      this._error.next(e);
     } finally {
-      this.$isLoading.next(false);
+      this._isLoading.next(false);
     }
   }
 
@@ -74,9 +77,9 @@ export class ObservableQuery<TResult, TVariables> {
   }
 
   private onNext(result: ApolloQueryResult<TResult>) {
-    this.$isLoading.next(result.loading);
+    this._isLoading.next(result.loading);
     if (result.errors && result.errors.length > 0) {
-      this.$error.next(result.errors[0]);
+      this._error.next(result.errors[0]);
     }
   }
 }

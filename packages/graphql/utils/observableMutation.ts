@@ -14,17 +14,20 @@ export interface ObservableMutationOptions<TResult, TVariables> {
 }
 
 export class ObservableMutation<TResult, TVariables> {
-  $isLoading = new BehaviorSubject(false);
-  $error = new BehaviorSubject<GraphQLError | null>(null);
+  public readonly _isLoading = new BehaviorSubject(false);
+  public readonly _error = new BehaviorSubject<GraphQLError | null>(null);
 
-  constructor(
+  public constructor(
     private readonly client: GraphQlClient,
     private readonly options: ObservableMutationOptions<TResult, TVariables>,
   ) {}
 
-  async execute(variables?: TVariables): Promise<TResult | null> {
+  public readonly isLoading$ = this._isLoading.asObservable();
+  public readonly error$ = this._error.asObservable();
+
+  public async execute(variables?: TVariables): Promise<TResult | null> {
     try {
-      this.$isLoading.next(true);
+      this._isLoading.next(true);
       const result = await this.client.mutate<TResult, TVariables>({
         mutation: this.options.document,
         variables: variables,
@@ -35,13 +38,13 @@ export class ObservableMutation<TResult, TVariables> {
         },
       });
 
-      this.$error.next(null);
+      this._error.next(null);
       return result.data || null;
     } catch (e) {
-      this.$error.next(e);
+      this._error.next(e);
       return null;
     } finally {
-      this.$isLoading.next(true);
+      this._isLoading.next(true);
     }
   }
 }
