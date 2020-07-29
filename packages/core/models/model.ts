@@ -9,7 +9,7 @@ export class Model<TFields extends AnyObject> {
 
   public fields$: BehaviorSubject<TFields>;
 
-  public getFields(): TFields {
+  public get fields(): TFields {
     return this.fields$.value;
   }
 
@@ -19,7 +19,7 @@ export class Model<TFields extends AnyObject> {
 
   public set(newFields: Partial<TFields>) {
     this.fields$.next({
-      ...this.getFields(),
+      ...this.fields,
       ...newFields,
     });
   }
