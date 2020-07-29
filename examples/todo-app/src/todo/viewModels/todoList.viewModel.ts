@@ -48,6 +48,10 @@ export class TodoListViewModel extends ViewModel<State> {
     this.setState({ newItemText: '' });
   }
 
+  public updateItem(itemId: string, text: string, isDone: boolean) {
+    this.todoListService.updateItem(itemId, text, isDone);
+  }
+
   public toggleAll() {
     for (const item of this.todoListService.items) {
       this.todoListService.updateItem(item.id, item.text, !this.state.isToggleAllChecked);

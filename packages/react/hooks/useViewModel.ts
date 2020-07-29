@@ -5,13 +5,26 @@ import { ClassType, ViewModel } from '@neon/core';
 
 import { useInject } from './useInject';
 
+function isClassType<T>(obj: any): obj is ClassType<T> {
+  return typeof obj === 'function' && !!obj.name;
+}
+
+type Create<T extends ViewModel<T>> = () => T;
+
 type Initialize<T extends ViewModel<T>> = (vm: T) => void;
 
 export function useViewModel<T extends ViewModel<any>>(
-  TClass: ClassType<T>,
+  createOrClass: Create<T> | ClassType<T>,
   initialize: Initialize<T> = () => {},
 ): T {
-  const vm = useInject(TClass);
+  let vm: T;
+  if (isClassType(createOrClass)) {
+    vm = useInject(createOrClass);
+  } else {
+    const vmRef = React.useRef(createOrClass());
+    vm = vmRef.current;
+  }
+
   const subscriptionRef = React.useRef<Subscription | null>(null);
   const [, setState] = React.useState(vm.state);
 

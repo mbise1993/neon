@@ -5,10 +5,11 @@ import { AnyObject } from '../utils/types';
 
 export abstract class ViewModel<TState extends AnyObject> {
   private readonly _state: BehaviorSubject<TState>;
-  private readonly _subscriptions: Subscription[] = [];
+  private readonly _subscriptions: Subscription[];
 
   public constructor(initialState: TState) {
     this._state = new BehaviorSubject(initialState);
+    this._subscriptions = [];
     this.state$ = this._state.asObservable();
   }
 

@@ -1,41 +1,76 @@
 import React from 'react';
 
 import { TodoItem } from '../models/todoItem.model';
-import { useTodoItemFacade } from '../facades/todoItem.facade';
 
 interface Props {
   todoItem: TodoItem;
+  onTextChange(value: string): void;
+  onToggleDoneClick(): void;
+  onDeleteClick(): void;
 }
 
-export const TodoItemView: React.FC<Props> = ({ todoItem }) => {
-  const facade = useTodoItemFacade(todoItem);
+export const TodoItemView: React.FC<Props> = ({
+  todoItem,
+  onTextChange,
+  onToggleDoneClick,
+  onDeleteClick,
+}) => {
+  const [state, setState] = React.useState({
+    editText: todoItem.text,
+    isEditing: false,
+  });
 
   let className = '';
-  if (facade.isEditing) {
+  if (state.isEditing) {
     className += 'editing';
   }
 
-  if (facade.isDone) {
+  if (todoItem.isDone) {
     className += ' complete';
   }
 
+  const handleDoubleClick = () => {
+    setState({
+      ...state,
+      isEditing: true,
+    });
+  };
+
+  const handleTextChange = (value: string) => {
+    setState({
+      ...state,
+      editText: value,
+    });
+  };
+
+  const handleKeyDown = (keyCode: number) => {
+    // Enter
+    if (keyCode === 13) {
+      onTextChange(state.editText);
+      setState({
+        editText: '',
+        isEditing: false,
+      });
+    }
+  };
+
   return (
-    <li className={className} onDoubleClick={() => facade.startEditing()}>
+    <li className={className} onDoubleClick={() => handleDoubleClick()}>
       <div className="view">
         <input
           className="toggle"
           type="checkbox"
-          checked={facade.isDone}
-          onChange={() => facade.toggleDone()}
+          checked={todoItem.isDone}
+          onChange={() => onToggleDoneClick()}
         />
-        <label>{facade.text}</label>
-        <button className="destroy" onClick={() => facade.deleteItem()}></button>
+        <label>{todoItem.text}</label>
+        <button className="destroy" onClick={() => onDeleteClick()}></button>
       </div>
       <input
         className="edit"
-        value={facade.editText}
-        onChange={e => facade.handleTextChange(e.target.value)}
-        onKeyDown={e => facade.handleKeyDown(e.keyCode)}
+        value={state.editText}
+        onChange={e => handleTextChange(e.target.value)}
+        onKeyDown={e => handleKeyDown(e.keyCode)}
       />
     </li>
   );

@@ -7,10 +7,8 @@ import { getFilterFromPath } from '../../common/utils/filter';
 import { TodoItemView } from '../components/TodoItemView';
 import { TodoListFooter } from '../components/TodoListFooter';
 import { TodoListViewModel } from '../viewModels/todoList.viewModel';
-// import { useTodoListFacade } from '../facades/todoList.facade';
 
 export const TodoListPage: React.FC = () => {
-  // const facade = useTodoListFacade();
   const location = useLocation();
   const vm = useViewModel(TodoListViewModel);
 
@@ -56,7 +54,13 @@ export const TodoListPage: React.FC = () => {
           <ul className="todo-list">
             {/* <!-- List items should get the class `editing` when editing and `completed` when marked as completed --> */}
             {vm.state.filteredItems.map(item => (
-              <TodoItemView key={item.id} todoItem={item} />
+              <TodoItemView
+                key={item.id}
+                todoItem={item}
+                onTextChange={text => vm.updateItem(item.id, text, item.isDone)}
+                onToggleDoneClick={() => vm.updateItem(item.id, item.text, !item.isDone)}
+                onDeleteClick={() => vm.deleteItem(item.id)}
+              />
             ))}
           </ul>
         </section>
