@@ -8,12 +8,10 @@ import { ContainerProvider, Scoped } from '@neon/react';
 
 import { AppScope } from './scopes';
 import { configureContainer } from './container.config';
-import { initializeDecorators } from './common/utils/lazyDecorators';
 import { SignInPage } from './auth/pages/SignInPage';
 import { TodoListPage } from './todo/pages/TodoListPage';
 
 const container = configureContainer();
-initializeDecorators(container);
 
 ReactDOM.render(
   <React.StrictMode>
