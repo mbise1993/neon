@@ -1,40 +1,37 @@
 import React from 'react';
+import { Subscription } from 'rxjs';
 
-import { ClassType } from '@neon/core';
+import { ClassType, ViewModel } from '@neon/core';
 
-const isShallowEqual = (a: any, b: any) => {
-  if (a === b) return true;
-  if (!(a instanceof Object) || !(b instanceof Object)) return false;
+import { useInject } from './useInject';
 
-  const keys = Object.keys(a);
-  const length = keys.length;
+type Initialize<T extends ViewModel<T>> = (vm: T) => void;
 
-  for (let i = 0; i < length; i++) {
-    if (!(keys[i] in b)) {
-      return false;
-    }
+export function useViewModel<T extends ViewModel<any>>(
+  TClass: ClassType<T>,
+  initialize: Initialize<T> = () => {},
+): T {
+  const vm = useInject(TClass);
+  const subscriptionRef = React.useRef<Subscription | null>(null);
+  const [, setState] = React.useState(vm.state);
+
+  if (!subscriptionRef.current) {
+    const subscription = vm.state$.subscribe(state => {
+      setState(state);
+    });
+
+    subscriptionRef.current = subscription;
+    initialize(vm);
   }
 
-  for (let i = 0; i < length; i++) {
-    if (a[keys[i]] !== b[keys[i]]) {
-      return false;
-    }
-  }
+  React.useEffect(() => {
+    return () => {
+      if (subscriptionRef.current) {
+        subscriptionRef.current.unsubscribe();
+        subscriptionRef.current = null;
+      }
+    };
+  }, []);
 
-  return length === Object.keys(b).length;
-};
-
-interface IReadOnly<T> {
-  get(): T;
+  return vm;
 }
-
-interface IReadWrite<T> {
-  get(): T;
-  set(value: T): void;
-}
-
-interface IReactViewModel<T> {
-  [key: string]: IReadOnly<any> | IReadWrite<any>;
-}
-
-export function useViewModel<T>(TClass: ClassType<T>) {}

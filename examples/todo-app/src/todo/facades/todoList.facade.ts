@@ -1,19 +1,23 @@
 import React from 'react';
 import { useLocation } from 'react-router';
 
-import { useInject, useSubject } from '@neon/react';
+import { useInject, useObservable } from '@neon/react';
 
 import { Filter, getFilterFromPath } from '../../common/utils/filter';
 import { TodoListService } from '../services/todoList.service';
 
 export function useTodoListFacade() {
   const todoListService = useInject(TodoListService);
-  const items = useSubject(todoListService.items$);
+  const items = useObservable(todoListService.items$, []);
   const location = useLocation();
   const [state, setState] = React.useState({
     newItemText: '',
     isToggleAllChecked: false,
   });
+
+  React.useEffect(() => {
+    todoListService.loadItems();
+  }, []);
 
   const handleTextChange = (value: string) => {
     setState({
@@ -50,7 +54,7 @@ export function useTodoListFacade() {
   };
 
   const clearCompletedItems = () => {
-    const completedItems = todoListService.items$.value.filter(item => item.isDone);
+    const completedItems = items.filter(item => item.isDone);
     for (const item of completedItems) {
       todoListService.deleteItem(item.id);
     }

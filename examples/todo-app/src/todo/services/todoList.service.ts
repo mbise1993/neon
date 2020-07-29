@@ -4,12 +4,20 @@ import { Injectable } from '@neon/core';
 
 import { TodoItem } from '../models/todoItem.model';
 
+let nextId = 4;
+
 @Injectable()
 export class TodoListService {
-  public readonly items$ = new BehaviorSubject<TodoItem[]>([]);
+  private readonly _items = new BehaviorSubject<TodoItem[]>([]);
+
+  public readonly items$ = this._items.asObservable();
+
+  public get items() {
+    return this._items.value;
+  }
 
   public loadItems() {
-    this.items$.next([
+    this._items.next([
       { id: '1', text: 'Buy some beer', isDone: false },
       { id: '2', text: 'Write some code', isDone: false },
       { id: '3', text: 'Get some sleep', isDone: false },
@@ -17,30 +25,22 @@ export class TodoListService {
   }
 
   public addItem(text: string) {
-    const id = this.items$.value.length + 1;
-    this.items$.next([
-      ...this.items$.value,
-      {
-        id: id.toString(),
-        text,
-        isDone: false,
-      },
-    ]);
+    const newItems = this.items.concat({
+      id: nextId.toString(),
+      text,
+      isDone: false,
+    });
+
+    nextId += 1;
+    this._items.next(newItems);
   }
 
   public updateItem(id: string, text: string, isDone: boolean) {
-    this.items$.next(
-      this.items$.value.map(item => {
-        if (item.id === id) {
-          return { id, text, isDone };
-        } else {
-          return item;
-        }
-      }),
-    );
+    const newItems = this.items.map(item => (item.id === id ? { id, text, isDone } : item));
+    this._items.next(newItems);
   }
 
   public deleteItem(id: string) {
-    this.items$.next(this.items$.value.filter(item => item.id !== id));
+    this._items.next(this.items.filter(item => item.id !== id));
   }
 }
