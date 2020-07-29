@@ -20,8 +20,8 @@ export function useViewModel<T extends ViewModel<any>>(
       setState(state);
     });
 
-    subscriptionRef.current = subscription;
     initialize(vm);
+    subscriptionRef.current = subscription;
   }
 
   React.useEffect(() => {
