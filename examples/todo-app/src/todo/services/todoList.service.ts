@@ -1,47 +1,46 @@
 import { BehaviorSubject } from 'rxjs';
 
-import { Injectable, Model } from '@neon/core';
+import { Injectable } from '@neon/core';
 
-import { TodoItemFields } from '../models/todoItem.model';
+import { TodoItem } from '../models/todoItem.model';
 
 @Injectable()
 export class TodoListService {
-  public readonly $items = new BehaviorSubject<Model<TodoItemFields>[]>([]);
+  public readonly items$ = new BehaviorSubject<TodoItem[]>([]);
 
   public loadItems() {
-    // this.items.next([
-    //   new TodoItem('1', 'Buy some beer'),
-    //   new TodoItem('2', 'Write some code'),
-    //   new TodoItem('3', 'Get some sleep'),
-    // ]);
-
-    this.$items.next([
-      new Model<TodoItemFields>({ id: '1', text: 'Buy some beer' }),
-      new Model<TodoItemFields>({ id: '2', text: 'Write some code' }),
-      new Model<TodoItemFields>({ id: '3', text: 'Get some sleep' }),
+    this.items$.next([
+      { id: '1', text: 'Buy some beer', isDone: false },
+      { id: '2', text: 'Write some code', isDone: false },
+      { id: '3', text: 'Get some sleep', isDone: false },
     ]);
   }
 
   public addItem(text: string) {
-    const id = this.$items.value.length + 1;
-    const newItem = new Model<TodoItemFields>({ id: id.toString(), text });
-
-    this.$items.next([...this.$items.value, newItem]);
+    const id = this.items$.value.length + 1;
+    this.items$.next([
+      ...this.items$.value,
+      {
+        id: id.toString(),
+        text,
+        isDone: false,
+      },
+    ]);
   }
 
-  public updateItem(id: string, text: string, isDone: boolean | undefined) {
-    const itemToUpdate = this.$items.value.find(item => item.get('id') === id);
-    if (!itemToUpdate) {
-      throw new Error(`Unable to find item with ID '${id}'`);
-    }
-
-    itemToUpdate.set({
-      text,
-      isDone,
-    });
+  public updateItem(id: string, text: string, isDone: boolean) {
+    this.items$.next(
+      this.items$.value.map(item => {
+        if (item.id === id) {
+          return { id, text, isDone };
+        } else {
+          return item;
+        }
+      }),
+    );
   }
 
   public deleteItem(id: string) {
-    this.$items.next(this.$items.value.filter(item => item.get('id') !== id));
+    this.items$.next(this.items$.value.filter(item => item.id !== id));
   }
 }

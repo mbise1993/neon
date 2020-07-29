@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { ClassType } from '../utils/types';
+import { ClassType } from '@neon/core';
+
 import { useContainer } from './useContainer';
 
 export function useInject<T1>(...types: [ClassType<T1>]): T1;

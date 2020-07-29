@@ -1,5 +1,4 @@
-import { Container, Injectable } from '../utils/di';
-import { inject } from 'inversify';
+import { Container, Inject, Injectable } from '../utils/di';
 
 export interface IScope {
   onAttach(container: Container): void;
@@ -10,15 +9,15 @@ export interface IScope {
 export class ScopeService {
   private readonly attachedScopes = new Map<string, IScope>();
 
-  constructor(@inject(Container) private readonly container: Container) {}
+  public constructor(@Inject(Container) private readonly container: Container) {}
 
-  attach(scopeId: string) {
+  public attach(scopeId: string) {
     const scope = this.container.get<IScope>(scopeId);
     scope.onAttach(this.container);
     this.attachedScopes.set(scopeId, scope);
   }
 
-  detach(scopeId: string) {
+  public detach(scopeId: string) {
     const scope = this.attachedScopes.get(scopeId);
     if (!scope) {
       throw new Error(`Scope with ID "${scopeId}" is not attached`);

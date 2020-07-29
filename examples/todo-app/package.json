@@ -16,6 +16,7 @@
   "dependencies": {
     "@neon/core": "0.1.0",
     "@neon/react": "0.1.0",
+    "auth": "^0.0.9",
     "common": "^0.2.5",
     "inversify-inject-decorators": "^3.1.0",
     "react": "^16.13.1",

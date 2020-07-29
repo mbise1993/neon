@@ -1,33 +1,12 @@
 import React from 'react';
-import { useLocation } from 'react-router';
 
-import { useVm } from '@neon/react';
-
-import { getFilterFromPath } from '../../common/utils/filter';
-import { TodoItem } from '..//components/TodoItem';
+import { TodoItemView } from '../components/TodoItemView';
 import { TodoListFooter } from '../components/TodoListFooter';
 
-import { TodoListViewModel } from '../viewModels/todoList.viewModel';
+import { useTodoListFacade } from '../facades/todoList.facade';
 
 export const TodoListPage: React.FC = () => {
-  const location = useLocation();
-  const vm = useVm(TodoListViewModel, (vm, bind) => {
-    vm.filter.next(getFilterFromPath(location.pathname));
-
-    bind(vm.newItemText);
-    bind(vm.filter);
-    bind(vm.hasItems);
-    bind(vm.itemsLeftCount);
-    bind(vm.isToggleAllChecked);
-    bind(vm.filteredItems);
-  });
-
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    // Enter
-    if (e.keyCode === 13) {
-      vm.addItem();
-    }
-  };
+  const facade = useTodoListFacade();
 
   return (
     <section className="todoapp">
@@ -37,34 +16,34 @@ export const TodoListPage: React.FC = () => {
           autoFocus
           className="new-todo"
           placeholder="What needs to be done?"
-          value={vm.newItemText.value}
-          onChange={e => vm.newItemText.next(e.target.value)}
-          onKeyDown={onKeyDown}
+          value={facade.newItemText}
+          onChange={e => facade.handleTextChange(e.target.value)}
+          onKeyDown={e => facade.handleKeyDown(e.keyCode)}
         />
       </header>
       {/* <!-- This section should be hidden by default and shown when there are todos --> */}
-      {vm.hasItems.value && (
+      {facade.hasItems && (
         <section className="main">
           <input
             id="toggle-all"
             className="toggle-all"
             type="checkbox"
-            checked={vm.getItemsLeftCount() === 0}
-            onChange={() => vm.toggleAll()}
+            checked={facade.itemsLeftCount === 0}
+            onChange={() => facade.toggleAll()}
           />
           <label htmlFor="toggle-all">Mark all as complete</label>
           <ul className="todo-list">
             {/* <!-- List items should get the class `editing` when editing and `completed` when marked as completed --> */}
-            {vm.getFilteredItems().map(item => (
-              <TodoItem key={item.get('id')} todoItem={item} />
+            {facade.filteredItems.map(item => (
+              <TodoItemView key={item.id} todoItem={item} />
             ))}
           </ul>
         </section>
       )}
       {/* <!-- This footer should hidden by default and shown when there are todos --> */}
       <TodoListFooter
-        itemsLeft={vm.getItemsLeftCount()}
-        onClearCompletedClick={() => vm.clearCompletedItems()}
+        itemsLeft={facade.itemsLeftCount}
+        onClearCompletedClick={() => facade.clearCompletedItems()}
       />
     </section>
   );

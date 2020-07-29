@@ -1,10 +1,10 @@
-export interface TodoItemFields {
+export interface TodoItem {
   id: string;
   text: string;
-  isDone?: boolean;
+  isDone: boolean;
 }
 
-export class TodoItem {
+export class TodoItemModel {
   private _isComplete = false;
 
   public constructor(private id: string, private text: string) {}

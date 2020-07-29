@@ -28,7 +28,7 @@ export abstract class ItemViewModel<TModel extends Model<any>> extends ViewModel
     this.model = model;
     this.fields = { ...this.model.getFields() };
 
-    this.model.fields.subscribe(() => this.notify());
+    this.model.fields$.subscribe(() => this.notify());
   }
 
   public get<TKey extends keyof ModelFields<TModel>>(key: TKey): ModelFields<TModel>[TKey] {

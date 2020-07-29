@@ -1,12 +1,10 @@
-import { Inject, Injectable, Observable } from '@neon/core';
+import { Inject, Injectable } from '@neon/core';
 
 import { AuthService } from '../services/auth.service';
 
 @Injectable()
-export class SignInViewModel extends Observable {
-  public constructor(@Inject(AuthService) private authService: AuthService) {
-    super();
-  }
+export class SignInViewModel {
+  public constructor(@Inject(AuthService) private authService: AuthService) {}
 
   public signIn() {
     return this.authService.signIn('1');
