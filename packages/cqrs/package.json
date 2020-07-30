@@ -1,7 +1,7 @@
 {
-  "name": "@neon/package-template",
+  "name": "@neon/cqrs",
   "version": "0.1.0",
-  "description": "Template for new Neon packages",
+  "description": "CQRS utiltities for Neon apps",
   "author": {
     "name": "Matt Bise",
     "url": "https://www.github.com/mbise1993"

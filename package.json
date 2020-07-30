@@ -11,9 +11,11 @@
   "private": true,
   "workspaces": [
     "packages/core",
+    "packages/cqrs",
     "packages/graphql",
     "packages/react",
-    "examples/todo-app"
+    "examples/todo-app",
+    "examples/todo-app-cqrs"
   ],
   "devDependencies": {
     "@testing-library/react-hooks": "^3.2.1",
